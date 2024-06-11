@@ -1,18 +1,31 @@
 import type { Shape } from "@crystallize/schema";
+import { useEffect, useState } from "react";
+import fetchShapeList from "../../api/fetchShapeList";
+import { apiClient } from "../../api/CrystallizeClient/crystallize.client";
 
-interface ShapeChooserProps {
-  shapes: Shape[];
-}
+export default function ShapeSelect() {
+  const [shapes, setShapes] = useState<Shape[]>([]);
 
-export default function ShapeSelect({ shapes }: ShapeChooserProps) {
+  useEffect(() => {
+    const fetchShapes = async () => {
+      try {
+        const res = await fetchShapeList(apiClient);
+        setShapes(res.shapes);
+      } catch (error) {
+        console.error("Something went wrong:", error);
+      }
+    };
+    fetchShapes();
+  }, []);
+
   return (
     <div>
       <select
         className="p-2 rounded text-sm"
         defaultValue=""
-        onChange={(e) =>
-          shapes.find((shape) => shape.identifier === e.target.value) as Shape
-        }
+        onChange={(e) => {
+          shapes.find((shape) => shape.identifier === e.target.value);
+        }}
       >
         <option value="" disabled>
           Select shape

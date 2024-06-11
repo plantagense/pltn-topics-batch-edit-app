@@ -1,6 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 
-export default function Product({ item, index }: any) {
+export default function Product({
+  children,
+  item,
+  index,
+  checked,
+  onCheckboxChange,
+}: any) {
   const [isOpen, setIsOpen] = useState(false);
   const productUrl = `https://app.crystallize.com/@pltn-dev/en/catalogue/product/${item?.id}`;
   const firstFiveTopics = item?.topics?.slice(0, 4);
@@ -20,52 +27,65 @@ export default function Product({ item, index }: any) {
     .filter((sku: any) => sku != null);
 
   return (
-    <li className="flex flex-col bg-[#fff] p-3 rounded border gap-5">
-      <div className="flex justify-between items-center">
-        <div className="flex gap-2 ">
-          <span className="text-sm">{index}.</span>
-          <h4 className="text-sm">{item?.name}</h4>
-          <a
-            target="_blank"
-            href={productUrl}
-            className="text-sm text-secondary-soil bg-secondary-sand rounded-full px-2 self-end shadow"
-          >
-            {prodSku}
-          </a>
-        </div>
-        <div className="flex gap-2">
-          {firstFiveTopics?.map((topic: any) => (
-            <ItemTopic key={topic.name} topic={topic} />
-          ))}
-          {remainingTopics.length > 0 && (
-            <button
-              onClick={() => setIsOpen((open) => !open)}
-              className={`p-2  hover:bg-secondary-eucalyptus text-secondary-shell text-sm rounded ${
-                isOpen
-                  ? "bg-secondary-eucalyptus shadow-inner"
-                  : "bg-secondary-pine shadow"
-              }`}
+    <>
+      {children}
+      <li className="flex flex-col bg-[#fff] px-3 py-1.5 gap-5">
+        <div className="grid grid-cols-3 gap-2 items-center">
+          <div className="flex gap-2">
+            <input
+              type="checkbox"
+              checked={checked}
+              onChange={() => onCheckboxChange(item?.id)}
+              id="itemIndex"
+            />
+            <h4 className="text-sm">
+              {index}. {item?.name}
+            </h4>
+          </div>
+          <div>
+            <a
+              target="_blank"
+              href={productUrl}
+              className="text-xs text-secondary-soil bg-secondary-sand rounded-full px-2 shadow"
             >
-              + {remainingTopics.length}
-            </button>
-          )}
+              {prodSku}
+            </a>
+          </div>
+          <div className="flex gap-2 justify-self-end">
+            {firstFiveTopics?.map((topic: any) => (
+              <ItemTopic key={topic.name} topic={topic} />
+            ))}
+            {remainingTopics.length > 0 && (
+              <button
+                onClick={() => setIsOpen((open) => !open)}
+                className={`p-2  hover:bg-secondary-eucalyptus text-secondary-shell text-xs rounded ${
+                  isOpen
+                    ? "bg-secondary-eucalyptus shadow-inner"
+                    : "bg-secondary-pine shadow"
+                }`}
+              >
+                + {remainingTopics.length}
+              </button>
+            )}
+          </div>
         </div>
-      </div>
-      {isOpen && (
-        <div className="flex gap-3 p-5 border border-plantagen-beige rounded flex-wrap">
-          {remainingTopics?.map((topic: any) => (
-            <ItemTopic key={topic.name} topic={topic} />
-          ))}
-        </div>
-      )}
-    </li>
+
+        {isOpen && (
+          <div className="flex gap-3 p-3 border border-plantagen-beige rounded flex-wrap">
+            {remainingTopics?.map((topic: any) => (
+              <ItemTopic key={topic.name} topic={topic} />
+            ))}
+          </div>
+        )}
+      </li>
+    </>
   );
 }
 
 function ItemTopic({ topic }: any) {
   return (
     <div>
-      <button className="flex gap-1 items-center py-2 px-3 border rounded shadow hover:bg-state-success z-50">
+      <button className="flex gap-1 items-center py-2 px-3 border rounded shadow-sm hover:bg-state-success">
         <span className="text-xs">{topic?.name}</span>
       </button>
     </div>

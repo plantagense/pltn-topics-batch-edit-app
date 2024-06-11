@@ -53,9 +53,9 @@ export default async function fetchShapeList(
   //     })
   // ).then((res) => res.flat().filter((item) => !!item && item?.tree?.path));
 
-  return { shapes };
   // return {
   //   shapes,
   //   folders: [...folders],
   // };
+  return { shapes };
 }

@@ -1,16 +1,28 @@
 import type { Topic } from "@crystallize/schema";
-interface TopicsChooserProps {
-  topics: Topic[];
-}
+import { useEffect, useState } from "react";
+import fetchTopicList from "../../api/fetchTopicList";
+import { apiClient } from "../../api/CrystallizeClient/crystallize.client";
+import { useTopic } from "../../context/TopicContext";
 
-export default function TopicSelector({ topics }: TopicsChooserProps) {
+export default function TopicSelector() {
+  const { setSelectedTopic } = useTopic();
+  const [topics, setTopic] = useState<Topic[] | null>(null);
+
+  useEffect(() => {
+    const fetchTopics = async () => {
+      const topics = await fetchTopicList(apiClient);
+      setTopic(topics);
+    };
+    fetchTopics();
+  }, []);
+
   return (
     <div>
       <select
         className="p-2 rounded text-sm"
         defaultValue=""
         onChange={(e) => {
-          e.target.value;
+          setSelectedTopic(e.target.value);
         }}
       >
         <option value="" disabled>
