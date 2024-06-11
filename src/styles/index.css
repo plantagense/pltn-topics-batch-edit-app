@@ -1,0 +1,9 @@
+@import url("./fonts.css");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: "Plantagen", sans-serif;
+  font-weight: normal;
+}
