@@ -1,13 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 
-export default function Product({
-  children,
-  item,
-  index,
-  checked,
-  onCheckboxChange,
-}: any) {
+export default function Product({ children, item, index }: any) {
   const [isOpen, setIsOpen] = useState(false);
   const productUrl = `https://app.crystallize.com/@pltn-dev/en/catalogue/product/${item?.id}`;
   const firstFiveTopics = item?.topics?.slice(0, 4);
@@ -34,8 +28,8 @@ export default function Product({
           <div className="flex gap-2">
             <input
               type="checkbox"
-              checked={checked}
-              onChange={() => onCheckboxChange(item?.id)}
+              checked={false}
+              onChange={() => {}}
               id="itemIndex"
             />
             <h4 className="text-sm">

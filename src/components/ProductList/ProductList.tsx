@@ -7,10 +7,7 @@ import { useTopic } from "../../context/TopicContext";
 
 export default function ProductList() {
   const [products, setProducts] = useState([]);
-  const [checkedItems, setCheckedItems] = useState({});
   const { selectedTopic } = useTopic();
-
-  console.log(checkedItems);
 
   useEffect(() => {
     const fetchProductsByPath = async () => {
@@ -18,34 +15,12 @@ export default function ProductList() {
       try {
         const products = await fetchProducts(selectedTopic, apiClient);
         setProducts(products);
-        // Initialize checkedItems with product IDs set to false
-        const initialCheckedItems = {};
-        products.forEach((product) => {
-          initialCheckedItems[product.node.id] = false;
-        });
-        setCheckedItems(initialCheckedItems);
       } catch (error) {
         console.log("Something went wrong:", error);
       }
     };
     fetchProductsByPath();
   }, [selectedTopic]);
-
-  function handleCheckboxChange(id) {
-    setCheckedItems((prevCheckedItems) => ({
-      ...prevCheckedItems,
-      [id]: !prevCheckedItems[id],
-    }));
-  }
-
-  function handleSelectAllChange() {
-    const allChecked = Object.values(checkedItems).every((item) => item);
-    const newCheckedItems = {};
-    Object.keys(checkedItems).forEach((key) => {
-      newCheckedItems[key] = !allChecked;
-    });
-    setCheckedItems(newCheckedItems);
-  }
 
   return (
     <main className="flex flex-col gap-10 bg-secondary-shell rounded shadow p-1">
@@ -62,12 +37,9 @@ export default function ProductList() {
               <input
                 type="checkbox"
                 id="all"
-                checked={
-                  Object.values(checkedItems).length > 0 &&
-                  Object.values(checkedItems).every((item) => item)
-                }
+                checked={false}
                 className="justify-self-start"
-                onChange={handleSelectAllChange}
+                onChange={() => {}}
               />
               <h3 className="text-left font-bold">Name</h3>
             </div>
@@ -79,8 +51,8 @@ export default function ProductList() {
               key={product?.node?.id}
               item={product?.node}
               index={index + 1}
-              checked={checkedItems[product?.node?.id]}
-              onCheckboxChange={handleCheckboxChange}
+              checked={false}
+              onCheckboxChange={() => {}}
             >
               {index > 0 ? <hr /> : null}
             </Product>
