@@ -1,8 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 
-export default function Product({ children, item, index }: any) {
+export default function Product({
+  children,
+  item,
+  index,
+  onCheckboxChange,
+}: any) {
   const [isOpen, setIsOpen] = useState(false);
+
   const productUrl = `https://app.crystallize.com/@pltn-dev/en/catalogue/product/${item?.id}`;
   const firstFiveTopics = item?.topics?.slice(0, 4);
   const remainingTopics = item?.topics?.slice(4);
@@ -28,9 +34,12 @@ export default function Product({ children, item, index }: any) {
           <div className="flex gap-2">
             <input
               type="checkbox"
-              checked={false}
-              onChange={() => {}}
-              id="itemIndex"
+              onChange={() => {
+                onCheckboxChange({
+                  id: item?.id,
+                  topics: item.topics.map((topic: any) => topic.id),
+                });
+              }}
             />
             <h4 className="text-sm">
               {index}. {item?.name}
@@ -47,7 +56,7 @@ export default function Product({ children, item, index }: any) {
           </div>
           <div className="flex gap-2 justify-self-end">
             {firstFiveTopics?.map((topic: any) => (
-              <ItemTopic key={topic.name} topic={topic} />
+              <ItemTopic key={topic.id} topic={topic} />
             ))}
             {remainingTopics.length > 0 && (
               <button
@@ -67,7 +76,7 @@ export default function Product({ children, item, index }: any) {
         {isOpen && (
           <div className="flex gap-3 p-3 border border-plantagen-beige rounded flex-wrap">
             {remainingTopics?.map((topic: any) => (
-              <ItemTopic key={topic.name} topic={topic} />
+              <ItemTopic key={topic.id} topic={topic} />
             ))}
           </div>
         )}
