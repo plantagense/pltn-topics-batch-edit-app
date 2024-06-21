@@ -30,17 +30,26 @@ export default function AddTopics() {
   console.log(selectedTopicIds);
 
   return (
-    <div className="mt-2 p-2 flex gap-5 w-full">
-      <button
-        onClick={() => setIsOpen((open) => !open)}
-        className="flex p-2 rounded bg-plantagen-soil text-secondary-shell hover:bg-plantagen-red gap-4"
-      >
-        Add Topic <PlusSquare />
-      </button>
+    <div className="flex flex-col mt-2 p-2 gap-5 w-full">
+      <div className="flex gap-5">
+        <button
+          onClick={() => setIsOpen((open) => !open)}
+          className="flex p-2 rounded bg-plantagen-soil text-secondary-shell hover:bg-plantagen-red gap-4"
+        >
+          Add Topic <PlusSquare />
+        </button>
+        <button
+          onClick={() => setIsOpen((open) => !open)}
+          className="flex p-2 rounded bg-plantagen-soil text-secondary-shell hover:bg-plantagen-red gap-4 justify-end"
+        >
+          Save and Publish
+        </button>
+      </div>
       {isOpen && (
-        <div className="flex flex-col gap-2 h-48 overflow-y-auto overflow-hidden border border-gray-300 rounded p-2 bg-[#fff]">
+        <div className="grid grid-cols-5 gap-2 h-60 overflow-y-auto overflow-hidden border border-gray-300 rounded p-2 bg-[#fff]">
           {topics?.map((topic) => (
             <div key={topic.id}>
+              <h4 className="font-bold">{topic.name}</h4>
               <div className="flex flex-col gap-1 w-[150px]">
                 {topic.descendants?.map((descendant: Topic) => (
                   <label
@@ -64,12 +73,6 @@ export default function AddTopics() {
           ))}
         </div>
       )}
-      <button
-        onClick={() => setIsOpen((open) => !open)}
-        className="flex p-2 rounded bg-plantagen-soil text-secondary-shell hover:bg-plantagen-red gap-4 justify-end"
-      >
-        Save and Publish
-      </button>
     </div>
   );
 }
