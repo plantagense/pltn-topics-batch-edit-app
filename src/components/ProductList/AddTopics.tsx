@@ -4,9 +4,17 @@ import { useEffect, useState } from "react";
 import { apiClient } from "../../api/CrystallizeClient/crystallize.client";
 import fetchTopicList from "../../api/fetchTopicList";
 
-export default function AddTopics() {
+interface AddTopicsProps {
+  selectedTopicIds: string[];
+  setSelectedTopicIds: (selectedTopicIds: string[]) => void;
+}
+
+export default function AddTopics({
+  selectedTopicIds,
+  setSelectedTopicIds,
+}: AddTopicsProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>([]);
+
   const [topics, setTopics] = useState<Topic[] | null>(null);
 
   useEffect(() => {
@@ -27,8 +35,6 @@ export default function AddTopics() {
     });
   };
 
-  console.log(selectedTopicIds);
-
   return (
     <div className="flex flex-col mt-2 p-2 gap-5 w-full">
       <div className="flex gap-5">
@@ -37,12 +43,6 @@ export default function AddTopics() {
           className="flex p-2 rounded bg-plantagen-soil text-secondary-shell hover:bg-plantagen-red gap-4"
         >
           Add Topic <PlusSquare />
-        </button>
-        <button
-          onClick={() => setIsOpen((open) => !open)}
-          className="flex p-2 rounded bg-plantagen-soil text-secondary-shell hover:bg-plantagen-red gap-4 justify-end"
-        >
-          Save and Publish
         </button>
       </div>
       {isOpen && (
@@ -55,15 +55,16 @@ export default function AddTopics() {
                   <label
                     key={descendant.id}
                     className={`flex items-center gap-2 text-sm p-1 rounded ${
-                      selectedTopicIds.includes(descendant?.id) &&
+                      descendant?.id &&
+                      selectedTopicIds.includes(descendant.id) &&
                       "bg-secondary-shell"
                     }`}
                   >
                     <input
                       type="checkbox"
-                      value={descendant.id}
-                      checked={selectedTopicIds.includes(descendant.id)}
-                      onChange={() => handleCheckboxChange(descendant.id)}
+                      value={descendant.id || ""}
+                      checked={selectedTopicIds.includes(descendant.id || "")}
+                      onChange={() => handleCheckboxChange(descendant.id || "")}
                     />
                     <span className="line-clamp-1">{descendant.name}</span>
                   </label>
@@ -76,5 +77,3 @@ export default function AddTopics() {
     </div>
   );
 }
-
-function name(params: type) {}

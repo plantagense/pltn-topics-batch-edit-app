@@ -1,9 +1,8 @@
 import { ClientInterface } from "@crystallize/js-api-client";
 import { Id } from "@crystallize/schema";
 
-export default async function updateProduct(
+export default async function publishItem(
   prodId: Id,
-  topicIds: Id[],
   apiClient: ClientInterface
 ) {
   if (!apiClient.config.tenantId) {
@@ -12,15 +11,15 @@ export default async function updateProduct(
 
   const res = await apiClient.pimApi(
     `#graphql
-   mutation UPDATE_ITEM_TOPIC($prodId: ID!, $language: String!, $topicIds: [ID!]) {
-  product {
-    update(id: $prodId, language: $language, input: { topicIds: $topicIds }) {
+   mutation PUBLISH_ITEMS($prodId: ID!, $language: String!) {
+  item {
+    publish(id: $prodId, language: $language) {
       id
     }
   }
 }
 `,
-    { prodId: prodId, language: "en", topicIds: topicIds }
+    { prodId: prodId, language: "en" }
   );
   return res;
 }
