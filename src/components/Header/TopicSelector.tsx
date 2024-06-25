@@ -1,8 +1,18 @@
-import type { Topic } from "@crystallize/schema";
 import { useEffect, useState } from "react";
 import fetchTopicList from "../../api/fetchTopicList";
 import { apiClient } from "../../api/CrystallizeClient/crystallize.client";
 import { useTopic } from "../../context/TopicContext";
+
+type Topic = {
+  language?: string;
+  name: string;
+  id?: string;
+  path?: string;
+  parentId?: string;
+  pathIdentifier?: string;
+  children?: Topic[];
+  descendants?: Topic[];
+};
 
 export default function TopicSelector() {
   const { setSelectedTopic } = useTopic();
