@@ -49,11 +49,11 @@ export default function AddTopics({
       </div>
       {isOpen && (
         <div className="grid grid-cols-5 gap-2 h-60 overflow-y-auto overflow-hidden border border-gray-300 rounded p-2 bg-[#fff]">
-          {topics?.map((topic) => (
+          {topics?.map((topic: Topic) => (
             <div key={topic.id}>
               <h4 className="font-bold">{topic.name}</h4>
               <div className="flex flex-col gap-1 w-[150px]">
-                {topic.descendants?.map((descendant: Topic) => (
+                {topic.descendants?.map((descendant) => (
                   <label
                     key={descendant.id}
                     className={`flex items-center gap-2 text-sm p-1 rounded ${
