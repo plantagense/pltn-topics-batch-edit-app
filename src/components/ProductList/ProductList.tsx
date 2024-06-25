@@ -10,15 +10,20 @@ import updateProduct from "../../api/updateProduct";
 import publishItem from "../../api/publishItem";
 import toast, { Toaster } from "react-hot-toast";
 
+interface ProductTopicPair {
+  id: string;
+  topics: string[];
+}
+
 export default function ProductList() {
   const { selectedTopic } = useTopic();
-  const [isLoading, setIsLoading] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [products, setProducts] = useState([]);
   const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>([]);
-  const [selectedProductTopicPairs, setSelectedProductTopicPairs] = useState(
-    []
-  );
+  const [selectedProductTopicPairs, setSelectedProductTopicPairs] = useState<
+    ProductTopicPair[]
+  >([]);
 
   useEffect(() => {
     const fetchProductsByPath = async () => {
@@ -36,10 +41,7 @@ export default function ProductList() {
     fetchProductsByPath();
   }, [selectedTopic]);
 
-  const handleSelectedItem = (product: {
-    id: string;
-    topics: string[];
-  }): void => {
+  const handleSelectedItem = (product: ProductTopicPair): void => {
     setSelectedProductTopicPairs((prevSelected): any => {
       const isProductSelected = prevSelected.some(
         (item) => item.id === product.id

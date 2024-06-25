@@ -6,9 +6,9 @@ import fetchTopicList from "../../api/fetchTopicList";
 
 interface AddTopicsProps {
   selectedTopicIds: string[];
-  setSelectedTopicIds: (selectedTopicIds: string[]) => void;
+  setSelectedTopicIds: React.Dispatch<React.SetStateAction<string[]>>;
   isOpen: boolean;
-  setIsOpen: (isOpen: boolean) => void;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export default function AddTopics({
@@ -28,7 +28,7 @@ export default function AddTopics({
   }, []);
 
   const handleCheckboxChange = (topicId: string) => {
-    setSelectedTopicIds((prevSelected) => {
+    setSelectedTopicIds((prevSelected: string[]) => {
       if (prevSelected.includes(topicId)) {
         return prevSelected.filter((id) => id !== topicId);
       } else {
@@ -41,7 +41,7 @@ export default function AddTopics({
     <div className="flex flex-col gap-2 w-full">
       <div className="flex gap-5">
         <button
-          onClick={() => setIsOpen((open) => !open)}
+          onClick={() => setIsOpen((open: boolean) => !open)}
           className="flex p-2 rounded bg-plantagen-soil text-secondary-shell hover:bg-plantagen-red gap-4"
         >
           Add Topic <PlusSquare />
