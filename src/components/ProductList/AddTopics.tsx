@@ -1,5 +1,5 @@
-import { Topic } from "@crystallize/schema";
 import { PlusSquare } from "lucide-react";
+
 import { useEffect, useState } from "react";
 import { apiClient } from "../../api/CrystallizeClient/crystallize.client";
 import fetchTopicList from "../../api/fetchTopicList";
@@ -10,6 +10,17 @@ interface AddTopicsProps {
   isOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
+
+type Topic = {
+  language?: string;
+  name: string;
+  id?: string;
+  path?: string;
+  parentId?: string;
+  pathIdentifier?: string;
+  children?: Topic[];
+  descendants?: Topic[];
+};
 
 export default function AddTopics({
   selectedTopicIds,
