@@ -7,14 +7,16 @@ import fetchTopicList from "../../api/fetchTopicList";
 interface AddTopicsProps {
   selectedTopicIds: string[];
   setSelectedTopicIds: (selectedTopicIds: string[]) => void;
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
 }
 
 export default function AddTopics({
   selectedTopicIds,
   setSelectedTopicIds,
+  isOpen,
+  setIsOpen,
 }: AddTopicsProps) {
-  const [isOpen, setIsOpen] = useState(false);
-
   const [topics, setTopics] = useState<Topic[] | null>(null);
 
   useEffect(() => {
@@ -36,7 +38,7 @@ export default function AddTopics({
   };
 
   return (
-    <div className="flex flex-col mt-2 p-2 gap-5 w-full">
+    <div className="flex flex-col gap-2 w-full">
       <div className="flex gap-5">
         <button
           onClick={() => setIsOpen((open) => !open)}

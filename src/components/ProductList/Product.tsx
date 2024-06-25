@@ -1,17 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import toast, { Toaster } from "react-hot-toast";
+import { CopyIcon } from "lucide-react";
 import { useState } from "react";
 
-export default function Product({
-  children,
-  item,
-  index,
-  onCheckboxChange,
-}: any) {
+export default function Product({ children, item, index, onItemSelect }: any) {
   const [isOpen, setIsOpen] = useState(false);
 
   const productUrl = `https://app.crystallize.com/@pltn-dev/en/catalogue/product/${item?.id}`;
-  const firstFiveTopics = item?.topics?.slice(0, 4);
-  const remainingTopics = item?.topics?.slice(4);
+  const firstFiveTopics = item?.topics?.slice(0, 5);
+  const remainingTopics = item?.topics?.slice(5);
 
   const prodSku = item?.components
     ?.flatMap((component: any) => {
@@ -30,12 +27,14 @@ export default function Product({
     <>
       {children}
       <li className="flex flex-col bg-[#fff] px-3 py-1.5 gap-5">
-        <div className="grid grid-cols-3 gap-2 items-center">
+        <Toaster position="top-center" />
+        <div className="grid grid-cols-4 gap-2 items-center">
           <div className="flex gap-2">
             <input
+              name="product-checkbox"
               type="checkbox"
               onChange={() => {
-                onCheckboxChange({
+                onItemSelect({
                   id: item?.id,
                   topics: item.topics.map((topic: any) => topic.id),
                 });
@@ -45,23 +44,33 @@ export default function Product({
               {index}. {item?.name}
             </h4>
           </div>
-          <div>
+          <div className="flex gap-3 items-center">
             <a
               target="_blank"
               href={productUrl}
-              className="text-xs text-secondary-soil bg-secondary-sand rounded-full px-2 shadow"
+              className="text-xs text-secondary-soil bg-secondary-sand rounded-full py-1 px-3 shadow-sm hover:bg-plantagen-soil hover:text-secondary-shell"
             >
               {prodSku}
             </a>
+            <button
+              className="text-secondary-sand p-1 rounded hover:shadow"
+              onClick={() => {
+                navigator.clipboard.writeText(prodSku);
+                toast.success("Copied to clipboard");
+              }}
+            >
+              <CopyIcon className="w-4 h-4" />
+            </button>
           </div>
-          <div className="flex gap-2 justify-self-end">
+
+          <div className="flex gap-2 justify-self-end col-span-2">
             {firstFiveTopics?.map((topic: any) => (
               <ItemTopic key={topic.id} topic={topic} />
             ))}
             {remainingTopics.length > 0 && (
               <button
                 onClick={() => setIsOpen((open) => !open)}
-                className={`p-2  hover:bg-secondary-eucalyptus text-secondary-shell text-xs rounded ${
+                className={`p-1  hover:bg-secondary-eucalyptus text-secondary-shell text-xs rounded ${
                   isOpen
                     ? "bg-secondary-eucalyptus shadow-inner"
                     : "bg-secondary-pine shadow"
@@ -88,9 +97,19 @@ export default function Product({
 function ItemTopic({ topic }: any) {
   return (
     <div>
-      <button className="flex gap-1 items-center py-2 px-3 border rounded shadow-sm hover:bg-state-success">
+      <label
+        htmlFor="topic-checkbox"
+        className="flex items-center py-1 px-2 border rounded shadow-sm hover:bg-plantagen-soil hover:text-secondary-shell cursor-pointer"
+      >
         <span className="text-xs">{topic?.name}</span>
-      </button>
+
+        <input
+          id="topic-checkbox"
+          className="hidden"
+          type="checkbox"
+          value={topic?.id}
+        />
+      </label>
     </div>
   );
 }
