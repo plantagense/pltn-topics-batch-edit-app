@@ -36,8 +36,11 @@ export default function ProductList() {
     fetchProductsByPath();
   }, [selectedTopic]);
 
-  const handleSelectedItem = (product) => {
-    setSelectedProductTopicPairs((prevSelected) => {
+  const handleSelectedItem = (product: {
+    id: string;
+    topics: string[];
+  }): void => {
+    setSelectedProductTopicPairs((prevSelected): any => {
       const isProductSelected = prevSelected.some(
         (item) => item.id === product.id
       );
