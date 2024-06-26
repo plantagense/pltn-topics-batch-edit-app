@@ -24,8 +24,6 @@ export default function Product({ children, item, index, onItemSelect }: any) {
     })
     .filter((sku: any) => sku != null);
 
-  console.log(existingItemTopics);
-
   return (
     <>
       {children}
