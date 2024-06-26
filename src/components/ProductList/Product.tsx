@@ -5,6 +5,7 @@ import { useState } from "react";
 
 export default function Product({ children, item, index, onItemSelect }: any) {
   const [isOpen, setIsOpen] = useState(false);
+  const [existingItemTopics, setExistingItemTopics] = useState<string[]>([]);
 
   const productUrl = `https://app.crystallize.com/@pltn-dev/en/catalogue/product/${item?.id}`;
   const firstFiveTopics = item?.topics?.slice(0, 5);
@@ -22,6 +23,8 @@ export default function Product({ children, item, index, onItemSelect }: any) {
       });
     })
     .filter((sku: any) => sku != null);
+
+  console.log(existingItemTopics);
 
   return (
     <>
@@ -65,12 +68,17 @@ export default function Product({ children, item, index, onItemSelect }: any) {
 
           <div className="flex gap-2 justify-self-end col-span-2">
             {firstFiveTopics?.map((topic: any) => (
-              <ItemTopic key={topic.id} topic={topic} />
+              <ItemTopic
+                key={topic.id}
+                topic={topic}
+                existingItemTopics={existingItemTopics}
+                setExistingItemTopics={setExistingItemTopics}
+              />
             ))}
             {remainingTopics.length > 0 && (
               <button
                 onClick={() => setIsOpen((open) => !open)}
-                className={`p-1  hover:bg-secondary-eucalyptus text-secondary-shell text-xs rounded ${
+                className={`p-1 hover:bg-secondary-eucalyptus text-secondary-shell text-xs rounded ${
                   isOpen
                     ? "bg-secondary-eucalyptus shadow-inner"
                     : "bg-secondary-pine shadow"
@@ -83,9 +91,14 @@ export default function Product({ children, item, index, onItemSelect }: any) {
         </div>
 
         {isOpen && (
-          <div className="flex gap-3 p-3 border border-plantagen-beige rounded flex-wrap">
+          <div className="grid grid-cols-6 gap-2 p-2 bg-[#fcfcfcfc] border border-plantagen-beige rounded">
             {remainingTopics?.map((topic: any) => (
-              <ItemTopic key={topic.id} topic={topic} />
+              <ItemTopic
+                key={topic.id}
+                topic={topic}
+                existingItemTopics={existingItemTopics}
+                setExistingItemTopics={setExistingItemTopics}
+              />
             ))}
           </div>
         )}
@@ -94,20 +107,46 @@ export default function Product({ children, item, index, onItemSelect }: any) {
   );
 }
 
-function ItemTopic({ topic }: any) {
+interface ItemTopicProps {
+  topic: any;
+  existingItemTopics: string[];
+  setExistingItemTopics: React.Dispatch<React.SetStateAction<string[]>>;
+}
+
+function ItemTopic({
+  topic,
+  existingItemTopics,
+  setExistingItemTopics,
+}: ItemTopicProps) {
+  const handleCheckboxChange = (topicId: string) => {
+    setExistingItemTopics((prevSelected: string[]) => {
+      if (prevSelected.includes(topicId)) {
+        return prevSelected.filter((id) => id !== topicId);
+      } else {
+        return [...prevSelected, topicId];
+      }
+    });
+  };
+
   return (
     <div>
       <label
-        htmlFor="topic-checkbox"
-        className="flex items-center py-1 px-2 border rounded shadow-sm hover:bg-plantagen-soil hover:text-secondary-shell cursor-pointer"
+        htmlFor={`topic-checkbox-${topic.id}`}
+        className={`flex items-center py-1 px-2 border rounded shadow-sm hover:bg-plantagen-soil hover:text-secondary-shell cursor-pointer bg-[#fff] ${
+          topic.id && existingItemTopics.includes(topic.id)
+            ? "bg-secondary-terracotta text-secondary-shell"
+            : ""
+        }`}
       >
         <span className="text-xs">{topic?.name}</span>
-
         <input
-          id="topic-checkbox"
+          id={`topic-checkbox-${topic.id}`}
           className="hidden"
           type="checkbox"
-          value={topic?.id}
+          checked={existingItemTopics.includes(topic.id || "")}
+          onChange={() => {
+            handleCheckboxChange(topic?.id);
+          }}
         />
       </label>
     </div>
