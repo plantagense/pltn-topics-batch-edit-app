@@ -18,9 +18,9 @@ interface ProductTopicPair {
 
 export default function ProductList() {
   const { selectedTopic } = useTopic();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [products, setProducts] = useState([]);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>([]);
   const [existingItemTopics, setExistingItemTopics] = useState<string[]>([]);
   const [selectedProductTopicPairs, setSelectedProductTopicPairs] = useState<

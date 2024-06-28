@@ -15,8 +15,8 @@ type Topic = {
 };
 
 export default function TopicSelector() {
-  const { setSelectedTopic } = useTopic();
   const [topics, setTopic] = useState<Topic[] | null>(null);
+  const { setSelectedTopic } = useTopic();
 
   useEffect(() => {
     const fetchTopics = async () => {
