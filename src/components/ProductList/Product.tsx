@@ -3,9 +3,15 @@ import toast, { Toaster } from "react-hot-toast";
 import { CopyIcon } from "lucide-react";
 import { useState } from "react";
 
-export default function Product({ children, item, index, onItemSelect }: any) {
+export default function Product({
+  children,
+  item,
+  index,
+  onItemSelect,
+  existingItemTopics,
+  setExistingItemTopics,
+}: any) {
   const [isOpen, setIsOpen] = useState(false);
-  const [existingItemTopics, setExistingItemTopics] = useState<string[]>([]);
 
   const productUrl = `https://app.crystallize.com/@pltn-dev/en/catalogue/product/${item?.id}`;
   const firstFiveTopics = item?.topics?.slice(0, 5);

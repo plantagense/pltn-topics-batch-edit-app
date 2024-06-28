@@ -3,6 +3,7 @@ import { PlusSquare } from "lucide-react";
 import { useEffect, useState } from "react";
 import { apiClient } from "../../api/CrystallizeClient/crystallize.client";
 import fetchTopicList from "../../api/fetchTopicList";
+import Button from "../Button";
 
 interface AddTopicsProps {
   selectedTopicIds: string[];
@@ -51,12 +52,12 @@ export default function AddTopics({
   return (
     <div className="flex flex-col gap-2 w-full">
       <div className="flex gap-5">
-        <button
+        <Button
           onClick={() => setIsOpen((open: boolean) => !open)}
           className="flex p-2 rounded bg-plantagen-soil text-secondary-shell hover:bg-plantagen-red gap-4"
         >
           Add Topic <PlusSquare />
-        </button>
+        </Button>
       </div>
       {isOpen && (
         <div className="grid grid-cols-5 gap-2 h-60 overflow-y-auto overflow-hidden border border-gray-300 rounded p-2 bg-[#fff]">

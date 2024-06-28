@@ -9,6 +9,7 @@ import Loading from "../Loading";
 import updateProduct from "../../api/updateProduct";
 import publishItem from "../../api/publishItem";
 import toast, { Toaster } from "react-hot-toast";
+import Button from "../Button";
 
 interface ProductTopicPair {
   id: string;
@@ -21,6 +22,7 @@ export default function ProductList() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [products, setProducts] = useState([]);
   const [selectedTopicIds, setSelectedTopicIds] = useState<string[]>([]);
+  const [existingItemTopics, setExistingItemTopics] = useState<string[]>([]);
   const [selectedProductTopicPairs, setSelectedProductTopicPairs] = useState<
     ProductTopicPair[]
   >([]);
@@ -91,6 +93,46 @@ export default function ProductList() {
     }
   };
 
+  const handleRemoveTopics = async () => {
+    setIsLoading(true);
+
+    // Filter out existingItemTopics from each pair's topics array
+    const updatedPairs = selectedProductTopicPairs.map(
+      (pair: { id: string; topics: string[] }) => ({
+        ...pair,
+        topics: pair.topics.filter(
+          (topic) => !existingItemTopics.includes(topic)
+        ),
+      })
+    );
+
+    setSelectedProductTopicPairs(updatedPairs);
+
+    try {
+      await Promise.all(
+        updatedPairs.map((pair) =>
+          updateProduct(pair.id, pair.topics, apiClient)
+        )
+      );
+      await Promise.all(
+        updatedPairs.map((pair) => publishItem(pair.id, apiClient))
+      );
+      if (selectedTopic) {
+        const updatedProducts = await fetchProducts(selectedTopic, apiClient);
+        setProducts(updatedProducts);
+      }
+      toast.success("Removed and published successfully");
+    } catch (error) {
+      console.log("Failed to update product topics:", error);
+      toast.error("Failed to update product topics");
+    } finally {
+      setSelectedTopicIds([]);
+      setIsOpen(false);
+      setIsLoading(false);
+      setSelectedProductTopicPairs([]);
+    }
+  };
+
   return (
     <main className="flex flex-col gap-10 bg-secondary-shell rounded shadow p-1">
       <Toaster position="top-center" />
@@ -119,6 +161,8 @@ export default function ProductList() {
                 item={product?.node}
                 index={index + 1}
                 onItemSelect={handleSelectedItem}
+                existingItemTopics={existingItemTopics}
+                setExistingItemTopics={setExistingItemTopics}
               >
                 {index > 0 ? <hr /> : null}
               </Product>
@@ -134,14 +178,20 @@ export default function ProductList() {
                   setIsOpen={setIsOpen}
                 />
                 {selectedTopicIds.length > 0 && (
-                  <button
+                  <Button
                     onClick={handleAddTopics}
                     className="flex p-2 mt-2 rounded bg-plantagen-soil text-secondary-shell hover:bg-plantagen-red gap-4"
                   >
                     {isLoading ? <Loading /> : <span>Save and Publish</span>}
-                  </button>
+                  </Button>
                 )}
               </div>
+              <Button
+                onClick={handleRemoveTopics}
+                className="p-1 bg-plantagen-soil text-secondary-shell rounded hover:bg-plantagen-red"
+              >
+                <span>Test Delete</span>
+              </Button>
             </>
           )}
         </ul>
